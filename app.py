@@ -4,12 +4,23 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
+import os
+import gdown
 
 # =========================
-# Config
+# Config   https://drive.google.com/file/d/1x0HRnUKBpxHs9DPXYcZRbE0AcKIoZO5C/view?usp=drive_link
 # =========================
 MODEL_PATH = "model.h5"
+MODEL_URL = "https://drive.google.com/uc?id=1x0HRnUKBpxHs9DPXYcZRbE0AcKIoZO5C"  # <-- replace with your Google Drive file ID
 PASSWORD = "Doctor@2025"  # <-- change this
+
+# =========================
+# Download model if missing
+# =========================
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("📥 Downloading model file... please wait"):
+            gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
 # =========================
 # Password protection
@@ -38,6 +49,7 @@ def check_password():
 # =========================
 @st.cache_resource
 def load_trained_model():
+    download_model()  # ensure model exists before loading
     return load_model(MODEL_PATH, compile=False)
 
 # === Class labels ===
